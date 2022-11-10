@@ -2,3 +2,5 @@ build/
 .vscode/
 
 *.spv
+
+*.blend1
