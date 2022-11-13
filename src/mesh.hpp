@@ -1,10 +1,6 @@
 #pragma once
 
-#include <glad/gl.h>
-
-#include <stdexcept>
 #include <cstdint>
-#include <string>
 #include <vector>
 
 #include <vec3.hpp>

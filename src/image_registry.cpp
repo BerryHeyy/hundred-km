@@ -1,5 +1,13 @@
 #include "image_registry.hpp"
 
+#include <stdexcept>
+#include <map>
+
+#include <glad/gl.h>
+#include <stb_image.h>
+
+#include "path_helper.hpp"
+
 static std::map<std::string, uint32_t> loaded_textures;
 
 uint32_t image_registry::load_texture(const std::string file_name)

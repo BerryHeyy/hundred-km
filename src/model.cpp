@@ -1,9 +1,12 @@
 #include "model.hpp"
 
-const std::string Model::RESOURCES_PATH = get_process_path() + "resources/";
-const std::string Model::TEXTURES_PATH = Model::RESOURCES_PATH + "texture/";
-const std::string Model::OBJ_PATH = Model::RESOURCES_PATH + "model/obj/";
-const std::string Model::MTL_PATH = Model::OBJ_PATH;
+#include <stdexcept>
+#include <string>
+
+#include <OBJ_Loader.h>
+
+#include "path_helper.hpp"
+#include "image_registry.hpp"
 
 Model::Model(const char *file_name)
 {

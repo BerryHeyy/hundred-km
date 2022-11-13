@@ -1,5 +1,11 @@
 #include "shader.hpp"
 
+#include <fstream>
+#include <sstream>
+#include <stdexcept>
+
+#include <glad/gl.h>
+
 Shader::Shader(const char* vertex_path, const char* fragment_path)
 {
     std::string v_code;

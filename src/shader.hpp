@@ -1,12 +1,7 @@
 #pragma once
 
-#include <glad/gl.h>
-
 #include <cstdint>
 #include <string>
-#include <fstream>
-#include <sstream>
-#include <stdexcept>
 
 class Shader
 {

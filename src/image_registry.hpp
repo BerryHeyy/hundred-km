@@ -1,14 +1,7 @@
 #pragma once
 
-#include <stdexcept>
 #include <cstdint>
 #include <string>
-#include <map>
-
-#include <glad/gl.h>
-#include <stb_image.h>
-
-#include "path_helper.hpp"
 
 namespace image_registry
 {

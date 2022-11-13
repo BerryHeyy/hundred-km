@@ -1,5 +1,9 @@
 #include "mesh.hpp"
 
+#include <glad/gl.h>
+
+#include <stdexcept>
+
 Mesh::Mesh() {}
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, uint32_t texture)
