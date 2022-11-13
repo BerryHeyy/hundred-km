@@ -18,7 +18,7 @@ uint32_t image_registry::load_texture(const std::string file_name)
     }
 
     int width, height, nr_channels;
-    unsigned char *data = stbi_load((get_process_path() + "resources/texture/" + file_name).c_str(), &width, &height, &nr_channels, 0); 
+    unsigned char *data = stbi_load((get_process_path() + "resources/texture/" + file_name).c_str(), &width, &height, &nr_channels, STBI_rgb_alpha); 
 
     if (data == NULL)
     {
@@ -29,7 +29,15 @@ uint32_t image_registry::load_texture(const std::string file_name)
     uint32_t texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // set texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    //glGenerateMipmap(GL_TEXTURE_2D);
 
     loaded_textures[file_name] = texture;
 

@@ -19,10 +19,12 @@ void Mesh::draw(Shader &shader) const
 {
     if (!initialized) throw std::runtime_error("Tried to draw an unitialized mesh.");
 
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
     // draw mesh
     shader.use();
+    shader.set_int("ourTexture", 0);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
