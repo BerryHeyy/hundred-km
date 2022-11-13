@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <string>
 
-#define OBJL_CONSOLE_OUTPUT
+//#define OBJL_CONSOLE_OUTPUT
 #include <OBJ_Loader.h>
 #include <gtc/matrix_transform.hpp>
 
