@@ -13,6 +13,10 @@
 
 GLFWwindow* window;
 
+glm::mat4 projection;
+
+int WIDTH = 800, HEIGHT = 600;
+
 void process_input(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -28,7 +32,7 @@ void init_glfw()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(800, 600, "Hundred Kilometers", NULL, NULL);
+    window = glfwCreateWindow(WIDTH, HEIGHT, "Hundred Kilometers", NULL, NULL);
     if (window == NULL)
     {
         glfwTerminate();
@@ -42,9 +46,12 @@ void init_glfw()
         throw std::runtime_error("Failed to initialize GLAD");
     }
 
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, WIDTH, HEIGHT);
     glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {
         glViewport(0, 0, width, height);
+        WIDTH = width;
+        HEIGHT = height;
+        projection = glm::perspective(glm::radians(45.0f), ((float) WIDTH) / ((float) HEIGHT), 0.1f, 100.0f);
     });
 
     // Opengl settings
@@ -63,17 +70,22 @@ int main()
     
     Player player;
 
-    glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    
+    projection = glm::perspective(glm::radians(45.0f), ((float) WIDTH) / ((float) HEIGHT), 0.1f, 100.0f);
 
+    double delta_time = 0;
+    double last_frame = 0;
     while (!glfwWindowShouldClose(window))
     {
+        // Poll and process events
         glfwPollEvents();
         process_input(window);
 
+        // Clear color and depth buffers
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        // Drawin stuff
         test_model.set_rotation(0, (float) glfwGetTime() * glm::radians(-50.0f), 0);
 
         shader.use();
@@ -83,7 +95,13 @@ int main()
         player.update(window);
         test_model.draw(shader);
 
+        // Swap buffers
         glfwSwapBuffers(window);
+
+        // Calculate delta time
+        float current_frame = glfwGetTime();
+        delta_time = current_frame - last_frame;
+        last_frame = current_frame;
     }
 
     glfwTerminate();
