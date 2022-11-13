@@ -10,7 +10,7 @@ uint32_t image_registry::load_texture(const std::string file_name)
     }
 
     int width, height, nr_channels;
-    unsigned char *data = stbi_load(("resources\\texture\\" + file_name).c_str(), &width, &height, &nr_channels, 0); 
+    unsigned char *data = stbi_load((get_process_path() + "resources/texture/" + file_name).c_str(), &width, &height, &nr_channels, 0); 
 
     if (data == NULL)
     {

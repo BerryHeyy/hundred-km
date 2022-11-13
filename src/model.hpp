@@ -7,6 +7,7 @@
 
 #include <OBJ_Loader.h>
 
+#include "path_helper.hpp"
 #include "mesh.hpp"
 #include "image_registry.hpp"
 

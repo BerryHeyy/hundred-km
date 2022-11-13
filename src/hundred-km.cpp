@@ -48,7 +48,12 @@ void init_glfw()
 
 int main()
 {
+
+    std::cout << get_process_path() << std::endl;
+    
     init_glfw();
+
+    
 
     Shader shader("resources/shader/test.vert", "resources/shader/test.frag");
 

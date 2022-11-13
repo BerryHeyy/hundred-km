@@ -8,6 +8,8 @@
 #include <glad/gl.h>
 #include <stb_image.h>
 
+#include "path_helper.hpp"
+
 namespace image_registry
 {
     // static std::map<std::string, uint32_t> loaded_textures;

@@ -1,8 +1,8 @@
 #include "model.hpp"
 
-const std::string Model::RESOURCES_PATH = ".\\resources\\";
-const std::string Model::TEXTURES_PATH = Model::RESOURCES_PATH + "texture\\";
-const std::string Model::OBJ_PATH = Model::RESOURCES_PATH + "model\\obj\\";
+const std::string Model::RESOURCES_PATH = get_process_path() + "resources/";
+const std::string Model::TEXTURES_PATH = Model::RESOURCES_PATH + "texture/";
+const std::string Model::OBJ_PATH = Model::RESOURCES_PATH + "model/obj/";
 const std::string Model::MTL_PATH = Model::OBJ_PATH;
 
 Model::Model(const char *file_name)
@@ -14,8 +14,11 @@ void Model::load_model(const char *file_name)
 {
     objl::Loader loader;
 
+    std::string pa = OBJ_PATH + file_name;
+
     if (!loader.LoadFile(OBJ_PATH + file_name))
     {
+        
         throw std::runtime_error("Failed to load obj file `" + std::string(file_name) + "`.");
     }
 

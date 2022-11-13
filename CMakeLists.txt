@@ -16,6 +16,8 @@ set (HKM_SOURCES
     model.cpp
     image_registry.hpp
     image_registry.cpp
+    path_helper.hpp
+    path_helper.cpp
 )
 list (TRANSFORM HKM_SOURCES PREPEND "src/")
 
@@ -24,6 +26,8 @@ target_include_directories (${PROJECT_NAME} PRIVATE dependencies/glad/include de
 target_link_libraries (${PROJECT_NAME} glfw)
 
 if (WIN32)
+
+    add_compile_definitions(ISWIN)
 
     message(STATUS "Generating build files specifically for windows.")
 
@@ -43,7 +47,11 @@ if (WIN32)
 endif(WIN32)
 if (UNIX)
 
-message(STATUS "Generating build files specifically for linux.")
+    add_compile_definitions(ISLINUX)
+
+    message(STATUS "Generating build files specifically for linux.")
+
+    target_link_libraries(${PROJECT_NAME} GL)
 
     if(NOT EXISTS "${CMAKE_BINARY_DIR}/resources")
         message(STATUS "Creating symlink for resources.")
