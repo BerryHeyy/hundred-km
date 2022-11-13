@@ -9,38 +9,42 @@ Player::Player()
     camera_up = glm::vec3(0.0f, 1.0f, 0.0f);
     camera_right = glm::normalize(glm::cross(campera_front, camera_up));
 
-    movement_speed = 0.05f;
+    movement_speed = 2.0f;
 
     regenerate_view_matrix();
 }
 
-void Player::update(GLFWwindow *window)
+void Player::update(GLFWwindow *window, float delta_time)
 {
     // Handle Input
-    bool inputted = false;
+    // Get movement direction
+    glm::vec3 movement_direction = glm::vec3(0.0f, 0.0f, 0.0f);
+
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
-        camera_pos += campera_front * movement_speed;
-        inputted = true;
+        movement_direction += campera_front * movement_speed;
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
     {
-        camera_pos -= campera_front * movement_speed;
-        inputted = true;
+        movement_direction -= campera_front * movement_speed;
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
     {
-        camera_pos -= camera_right * movement_speed;
-        inputted = true;
+        movement_direction -= camera_right * movement_speed;
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
     {
-        camera_pos += camera_right * movement_speed;
-        inputted = true;
+        movement_direction += camera_right * movement_speed;
     }
 
-    if (inputted)
+    if (movement_direction != glm::vec3(0.0f, 0.0f, 0.0f))
     {
+        // Normalize direction
+        movement_direction = glm::normalize(movement_direction);
+
+        // Apply the movement
+        camera_pos += movement_direction * movement_speed * delta_time;
+        
         regenerate_view_matrix();
     }
 }

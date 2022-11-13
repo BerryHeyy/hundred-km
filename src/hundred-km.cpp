@@ -92,7 +92,7 @@ int main()
         shader.set_mat4("view", player.view_matrix);
         shader.set_mat4("projection", projection);
 
-        player.update(window);
+        player.update(window, delta_time);
         test_model.draw(shader);
 
         // Swap buffers

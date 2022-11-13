@@ -18,7 +18,7 @@ public:
     
     Player();
 
-    void update(GLFWwindow *window);
+    void update(GLFWwindow *window, float delta_time);
 
     void regenerate_view_matrix();
 
