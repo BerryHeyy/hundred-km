@@ -17,6 +17,8 @@ glm::mat4 projection;
 
 int WIDTH = 800, HEIGHT = 600;
 
+double delta_time = 0;
+
 void process_input(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -54,6 +56,9 @@ void init_glfw()
         projection = glm::perspective(glm::radians(45.0f), ((float) WIDTH) / ((float) HEIGHT), 0.1f, 100.0f);
     });
 
+    glfwSetCursorPosCallback(window, player::handle_mouse);
+    glfwSetInputMode(window,  GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     // Opengl settings
     glEnable(GL_DEPTH_TEST); 
 }
@@ -67,13 +72,11 @@ int main()
     Shader shader("resources/shader/test.vert", "resources/shader/test.frag");
 
     Model test_model("test_cube.obj");
-    
-    Player player;
 
+    player::init(WIDTH, HEIGHT);
     
     projection = glm::perspective(glm::radians(45.0f), ((float) WIDTH) / ((float) HEIGHT), 0.1f, 100.0f);
 
-    double delta_time = 0;
     double last_frame = 0;
     while (!glfwWindowShouldClose(window))
     {
@@ -89,10 +92,10 @@ int main()
         test_model.set_rotation(0, (float) glfwGetTime() * glm::radians(-50.0f), 0);
 
         shader.use();
-        shader.set_mat4("view", player.view_matrix);
+        shader.set_mat4("view", player::get_view_matrix());
         shader.set_mat4("projection", projection);
 
-        player.update(window, delta_time);
+        player::update(window, delta_time);
         test_model.draw(shader);
 
         // Swap buffers

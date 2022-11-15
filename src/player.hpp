@@ -4,23 +4,16 @@
 #include <vec3.hpp>
 #include <mat4x4.hpp>
 
-class Player
+namespace player
 {
-public:
-    glm::vec3 camera_pos;
-    glm::vec3 campera_front;
-    glm::vec3 camera_up;
-    glm::vec3 camera_right;
+    void init(int swidth, int sheight);
 
-    glm::mat4 view_matrix;
+    const glm::mat4& get_view_matrix();
 
-    float movement_speed;
-    
-    Player();
+    void handle_movement(GLFWwindow *window, float delta_time);
+    void handle_mouse(GLFWwindow* window, double xpos, double ypos);
 
     void update(GLFWwindow *window, float delta_time);
 
     void regenerate_view_matrix();
-
-
-};
+}
