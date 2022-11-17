@@ -72,6 +72,9 @@ int main()
     Shader shader("resources/shader/test.vert", "resources/shader/test.frag");
 
     Model test_model("test_cube.obj");
+    Model test_model2("car.obj");
+
+    test_model.set_position(0.0f, 2.0f, 0.0f);
 
     player::init(WIDTH, HEIGHT);
     
@@ -85,11 +88,11 @@ int main()
         process_input(window);
 
         // Clear color and depth buffers
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Drawin stuff
-        test_model.set_rotation(0, (float) glfwGetTime() * glm::radians(-50.0f), 0);
+        test_model.set_rotation(test_model.get_rotation() + glm::vec3(0, glm::radians(-10.0f) * delta_time, 0));
 
         shader.use();
         shader.set_mat4("view", player::get_view_matrix());
@@ -97,6 +100,7 @@ int main()
 
         player::update(window, delta_time);
         test_model.draw(shader);
+        test_model2.draw(shader);
 
         // Swap buffers
         glfwSwapBuffers(window);
