@@ -25,9 +25,9 @@ add_executable (${PROJECT_NAME} ${HKM_SOURCES} dependencies/glad/src/gl.c)
 target_include_directories (${PROJECT_NAME} PRIVATE dependencies/glad/include dependencies/glfw/include/ dependencies/glm/glm dependencies/stb/ dependencies/OBJ-Loader/Source)
 target_link_libraries (${PROJECT_NAME} glfw)
 
-if (CMAKE_BUILD_TYPE MATCHES RELEASE)
+if (CMAKE_BUILD_TYPE MATCHES "Release")
     target_link_libraries (${PROJECT_NAME} -static-libgcc -static-libstdc++ -static)
-endif (CMAKE_BUILD_TYPE MATCHES RELEASE)
+endif (CMAKE_BUILD_TYPE MATCHES "Release")
 
 if (WIN32)
 
