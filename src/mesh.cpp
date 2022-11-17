@@ -24,7 +24,7 @@ void Mesh::draw(Shader &shader) const
 
     // draw mesh
     shader.use();
-    shader.set_int("ourTexture", 0);
+    shader.set_int("our_texture", 0);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
