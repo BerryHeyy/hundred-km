@@ -73,8 +73,10 @@ int main()
 
     Model test_model("test_cube.obj");
     Model test_model2("car.obj");
+    Model road("road_straight.obj");
 
     test_model.set_position(0.0f, 2.0f, 0.0f);
+    road.set_position(0.0f, -0.5f, 0.0f);
 
     player::init(WIDTH, HEIGHT);
     
@@ -101,6 +103,7 @@ int main()
         player::update(window, delta_time);
         test_model.draw(shader);
         test_model2.draw(shader);
+        road.draw(shader);
 
         // Swap buffers
         glfwSwapBuffers(window);
