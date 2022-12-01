@@ -1,0 +1,22 @@
+# Blender 3.3.0 MTL File: 'road_curve_90deg_20m.blend'
+# www.blender.org
+
+newmtl grass
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd grass_1.png
+
+newmtl road.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd road.png
