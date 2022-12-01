@@ -73,7 +73,7 @@ int main()
 
     Model test_model("test_cube.obj");
     Model test_model2("car.obj");
-    Model road("road_straight.obj");
+    Model road("road_curve_90deg_20m.obj");
 
     test_model.set_position(0.0f, 2.0f, 0.0f);
     road.set_position(0.0f, -0.5f, 0.0f);
@@ -81,7 +81,7 @@ int main()
     player::init(WIDTH, HEIGHT);
     
     projection = glm::perspective(glm::radians(45.0f), ((float) WIDTH) / ((float) HEIGHT), 0.1f, 100.0f);
-
+    
     double last_frame = 0;
     while (!glfwWindowShouldClose(window))
     {
@@ -98,7 +98,8 @@ int main()
 
         shader.use();
         shader.set_mat4("view", player::get_view_matrix());
-        shader.set_mat4("projection", projection);
+        shader.set_mat4("projection", projection); // Find a way to only update projection matrix when window size changes
+        shader.set_vec2("screen_size", glm::vec2(WIDTH, HEIGHT));
 
         player::update(window, delta_time);
         test_model.draw(shader);

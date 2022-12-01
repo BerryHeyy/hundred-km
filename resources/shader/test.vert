@@ -7,13 +7,14 @@ layout (location = 2) in vec2 a_tex_coord;
 out vec2 out_tex_coord;
 smooth out float out_tex_coord_affine;
 
+uniform vec2 screen_size;
 uniform mat4 model_transform;
 uniform mat4 view;
 uniform mat4 projection;
 
 void main()
 {
-    vec2 res = vec2(800 / 10, 600 / 10); // Resolution used for vertex wobble
+    vec2 res = vec2(screen_size.x / 10, screen_size.y / 10); // Resolution used for vertex wobble
 
     vec4 vertex_view_m = view * model_transform * vec4(a_pos, 1.0);
     vec4 vertex_projected = projection * vertex_view_m;
