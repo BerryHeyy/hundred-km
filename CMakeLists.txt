@@ -18,6 +18,10 @@ set (HKM_SOURCES
     image_registry.cpp
     path_helper.hpp
     path_helper.cpp
+    scene.hpp
+    scene.cpp
+    spatial.hpp
+    spatial.cpp
 )
 list (TRANSFORM HKM_SOURCES PREPEND "src/")
 

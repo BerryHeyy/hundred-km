@@ -71,9 +71,11 @@ int main()
 
     Shader shader("resources/shader/test.vert", "resources/shader/test.frag");
 
-    Model test_model("test_cube.obj");
-    Model test_model2("car.obj");
-    Model road("road_curve_90deg_20m.obj");
+    
+
+    Model test_model("test_cube.obj", &shader);
+    Model test_model2("car.obj",  &shader);
+    Model road("road_curve_90deg_20m.obj",  &shader);
 
     test_model.set_position(0.0f, 2.0f, 0.0f);
     road.set_position(0.0f, -0.5f, 0.0f);
@@ -102,9 +104,9 @@ int main()
         shader.set_vec2("screen_size", glm::vec2(WIDTH, HEIGHT));
 
         player::update(window, delta_time);
-        test_model.draw(shader);
-        test_model2.draw(shader);
-        road.draw(shader);
+        test_model.draw();
+        test_model2.draw();
+        road.draw();
 
         // Swap buffers
         glfwSwapBuffers(window);

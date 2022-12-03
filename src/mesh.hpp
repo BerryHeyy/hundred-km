@@ -26,7 +26,7 @@ public:
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, uint32_t texture);
 
-    void draw(Shader &shader) const;
+    void draw(Shader *shader) const;
     void initialize_mesh();
 
 private:

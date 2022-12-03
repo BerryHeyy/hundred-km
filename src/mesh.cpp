@@ -15,7 +15,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, uint
     initialize_mesh();
 }
 
-void Mesh::draw(Shader &shader) const
+void Mesh::draw(Shader *shader) const
 {
     if (!initialized) throw std::runtime_error("Tried to draw an unitialized mesh.");
 
@@ -23,8 +23,8 @@ void Mesh::draw(Shader &shader) const
     glBindTexture(GL_TEXTURE_2D, texture);
 
     // draw mesh
-    shader.use();
-    shader.set_int("our_texture", 0);
+    shader->use();
+    shader->set_int("our_texture", 0);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
