@@ -1,6 +1,7 @@
 #include "player.hpp"
 
 #include <gtc/matrix_transform.hpp>
+#include <vec3.hpp>
 
 // Camera variables
 static glm::vec3 camera_pos;

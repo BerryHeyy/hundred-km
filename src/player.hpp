@@ -1,7 +1,6 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
-#include <vec3.hpp>
 #include <mat4x4.hpp>
 
 namespace player
