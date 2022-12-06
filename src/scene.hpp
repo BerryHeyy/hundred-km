@@ -7,14 +7,14 @@
 #include "spatial.hpp"
 #include "model.hpp"
 
-class Scene : Spatial
+class Scene : public Spatial
 {
 public:
-    std::vector<Model> models;
-    std::vector<Scene> children;
+    std::vector<Model *> child_models;
+    std::vector<Scene *> child_scenes;
 
-    void add_child(const Scene& child);
-    void add_model(const Model& model);
+    void add_scene(Scene* child_scene);
+    void add_model(Model* child_model);
 
     void draw_scene() const;
 };

@@ -22,6 +22,8 @@ set (HKM_SOURCES
     scene.cpp
     spatial.hpp
     spatial.cpp
+    transform.hpp
+    transform.cpp
 )
 list (TRANSFORM HKM_SOURCES PREPEND "src/")
 

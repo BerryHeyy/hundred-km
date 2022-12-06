@@ -21,7 +21,7 @@ void Model::draw() const
 {
     for (size_t i = 0; i < meshes.size(); i++)
     {
-        shader->set_mat4("model_transform", transformation_matrix);
+        shader->set_mat4("model_transform", get_transformation_matrix());
         meshes[i].draw(shader);
     }
 }

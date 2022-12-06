@@ -6,7 +6,7 @@
 #include <gtc/matrix_transform.hpp>
 
 #include "player.hpp"
-#include "model.hpp"
+#include "scene.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -71,14 +71,19 @@ int main()
 
     Shader shader("resources/shader/test.vert", "resources/shader/test.frag");
 
-    
+    Scene world;
+    world.set_position(0.0f, -10.0f, 0.0f);
 
-    Model test_model("test_cube.obj", &shader);
-    Model test_model2("car.obj",  &shader);
-    Model road("road_curve_90deg_20m.obj",  &shader);
+    Model* test_model = new Model("test_cube.obj", &shader);
+    Model* test_model2 = new Model("car.obj",  &shader);
+    Model* road = new Model("road_curve_90deg_20m.obj",  &shader);
 
-    test_model.set_position(0.0f, 2.0f, 0.0f);
-    road.set_position(0.0f, -0.5f, 0.0f);
+    world.add_model(test_model);
+    world.add_model(test_model2);
+    world.add_model(road);
+
+    test_model->set_position(0.0f, 2.0f, 0.0f);
+    road->set_position(0.0f, -0.5f, 0.0f);
 
     player::init(WIDTH, HEIGHT);
     
@@ -96,7 +101,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Drawin stuff
-        test_model.set_rotation(test_model.get_rotation() + glm::vec3(0, glm::radians(-10.0f) * delta_time, 0));
+        test_model->set_rotation(test_model->get_rotation() + glm::vec3(0, glm::radians(-10.0f) * delta_time, 0));
 
         shader.use();
         shader.set_mat4("view", player::get_view_matrix());
@@ -104,9 +109,7 @@ int main()
         shader.set_vec2("screen_size", glm::vec2(WIDTH, HEIGHT));
 
         player::update(window, delta_time);
-        test_model.draw();
-        test_model2.draw();
-        road.draw();
+        world.draw_scene();
 
         // Swap buffers
         glfwSwapBuffers(window);

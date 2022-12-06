@@ -14,6 +14,7 @@ public:
     Model(const char *file_name, Shader* shader);
 
     void draw() const;
+    void draw(const Transform& parent_transform) const;
 
 private:
     Shader* shader;

@@ -1,24 +1,43 @@
 #include "scene.hpp"
 
-void Scene::add_child(const Scene& child)
+#include <stdexcept>
+
+void Scene::add_scene(Scene* child_scene)
 {
-    children.push_back(child);
+    if (child_scene->has_parent())
+        throw std::runtime_error("Tried adding a scene that already has a parent to another scene.");
+
+    child_scene->set_parent(&transform);
+    transform.children.push_back(&child_scene->get_transform());
+
+    child_scenes.push_back(child_scene);
+
+    child_scene->get_transform().regenerate_transformation_matrix();
 }
 
-void Scene::add_model(const Model& model)
+void Scene::add_model(Model* child_model)
 {
-    models.push_back(model);
+    if (child_model->has_parent())
+        throw std::runtime_error("Tried adding a model that already has a parent to a scene.");
+
+    child_model->set_parent(&transform);
+    transform.children.push_back(&child_model->get_transform());
+
+    child_models.push_back(child_model);
+
+    child_model->get_transform().regenerate_transformation_matrix();
 }
 
 void Scene::draw_scene() const
 {
-    for (int i = 0; i < children.size(); i++)
+    for (int i = 0; i < child_scenes.size(); i++)
     {
-        children[i].draw_scene();
+        child_scenes[i]->draw_scene();
     }
 
-    for (int i = 0; i < models.size(); i++)
+    for (int i = 0; i < child_models.size(); i++)
     {
-        models[i].draw();
+        child_models[i]->draw();
     }
 }
+
