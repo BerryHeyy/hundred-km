@@ -120,6 +120,8 @@ int main()
         last_frame = current_frame;
     }
 
+    delete test_model, test_model2, road;
+
     glfwTerminate();
     return 0;
 }
