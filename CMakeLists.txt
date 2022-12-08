@@ -6,28 +6,10 @@ add_subdirectory (dependencies/glfw/)
 
 set (HKM_SOURCES
     hundred-km.cpp
-    mesh.hpp
-    mesh.cpp
-    shader.hpp
-    shader.cpp
-    player.hpp
-    player.cpp
-    model.hpp
-    model.cpp
-    image_registry.hpp
-    image_registry.cpp
-    path_helper.hpp
-    path_helper.cpp
-    scene.hpp
-    scene.cpp
-    spatial.hpp
-    spatial.cpp
-    transform.hpp
-    transform.cpp
 )
 list (TRANSFORM HKM_SOURCES PREPEND "src/")
 
-add_executable (${PROJECT_NAME} ${HKM_SOURCES} dependencies/glad/src/gl.c)
+add_executable (${PROJECT_NAME} ${HKM_SOURCES})
 target_include_directories (${PROJECT_NAME} PRIVATE dependencies/glad/include dependencies/glfw/include/ dependencies/glm/glm dependencies/stb/ dependencies/OBJ-Loader/Source)
 target_link_libraries (${PROJECT_NAME} glfw)
 
@@ -40,8 +22,6 @@ if (WIN32)
     add_compile_definitions(ISWIN)
 
     message(STATUS "Generating build files specifically for windows.")
-
-    target_link_libraries(${PROJECT_NAME} opengl32.lib)
 
     if(NOT EXISTS "${CMAKE_BINARY_DIR}/resources")
         message(STATUS "Creating symlink for resources.")
@@ -60,8 +40,6 @@ if (UNIX)
     add_compile_definitions(ISLINUX)
 
     message(STATUS "Generating build files specifically for linux.")
-
-    target_link_libraries(${PROJECT_NAME} GL)
 
     if(NOT EXISTS "${CMAKE_BINARY_DIR}/resources")
         message(STATUS "Creating symlink for resources.")
