@@ -60,7 +60,10 @@ void init_glfw()
     glfwSetInputMode(window,  GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Opengl settings
-    glEnable(GL_DEPTH_TEST); 
+    glEnable(GL_DEPTH_TEST);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 int main()
@@ -72,18 +75,20 @@ int main()
     Shader shader("resources/shader/test.vert", "resources/shader/test.frag");
 
     Scene world;
-    world.set_position(0.0f, -10.0f, 0.0f);
+    world.set_position(0.0f, -1.0f, 0.0f);
 
     Model* test_model = new Model("test_cube.obj", &shader);
     Model* test_model2 = new Model("car.obj",  &shader);
-    Model* road = new Model("road_curve_90deg_20m.obj",  &shader);
+    Model* road = new Model("road_curve_90deg_20m.obj", &shader);
+    Model* grass_trees = new Model("grass_trees_1.obj", &shader);
 
     world.add_model(test_model);
     world.add_model(test_model2);
     world.add_model(road);
+    world.add_model(grass_trees);
 
     test_model->set_position(0.0f, 2.0f, 0.0f);
-    road->set_position(0.0f, -0.5f, 0.0f);
+    test_model2->set_position(0.0f, 0.5f, 0.0f);
 
     player::init(WIDTH, HEIGHT);
     
@@ -120,7 +125,7 @@ int main()
         last_frame = current_frame;
     }
 
-    delete test_model, test_model2, road;
+    delete test_model, test_model2, road, grass_trees;
 
     glfwTerminate();
     return 0;
