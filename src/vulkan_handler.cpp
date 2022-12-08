@@ -988,6 +988,11 @@ void hkm::vulkan_handler::draw_frame()
     current_frame = (current_frame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
 
+void hkm::vulkan_handler::wait_for_exit()
+{
+    vkDeviceWaitIdle(device);
+}
+
 void hkm::vulkan_handler::cleanup_vulkan()
 {
     cleanup_swap_chain();

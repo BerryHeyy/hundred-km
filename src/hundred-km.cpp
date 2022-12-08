@@ -38,6 +38,8 @@ int main()
         hkm::vulkan_handler::draw_frame();
     }
 
+    hkm::vulkan_handler::wait_for_exit();
+
     cleanup();
 
     return 0;

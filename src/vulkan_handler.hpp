@@ -8,6 +8,7 @@ namespace hkm::vulkan_handler
 
     void draw_frame();
 
+    void wait_for_exit();
     void cleanup_vulkan();
 }
 
