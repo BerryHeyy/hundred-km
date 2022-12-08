@@ -6,6 +6,10 @@ add_subdirectory (dependencies/glfw/)
 
 set (HKM_SOURCES
     hundred-km.cpp
+    vulkan_handler.hpp
+    vulkan_handler.cpp
+    resource_handler.hpp
+    resource_handler.cpp
 )
 list (TRANSFORM HKM_SOURCES PREPEND "src/")
 

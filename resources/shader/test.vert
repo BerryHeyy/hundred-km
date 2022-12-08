@@ -1,35 +1,21 @@
-#version 330 core
+#version 450
 
-layout (location = 0) in vec3 a_pos;
-layout (location = 1) in vec2 a_normal;
-layout (location = 2) in vec2 a_tex_coord;
+vec2 positions[3] = vec2[](
+    vec2(0.0, -0.5),
+    vec2(0.5, 0.5),
+    vec2(-0.5, 0.5)
+);
 
-out vec2 out_tex_coord;
-smooth out float out_tex_coord_affine;
+vec3 colors[3] = vec3[](
+    vec3(1.0, 0.0, 0.0),
+    vec3(0.0, 1.0, 0.0),
+    vec3(0.0, 0.0, 1.0)
+);
 
-uniform vec2 screen_size;
-uniform mat4 model_transform;
-uniform mat4 view;
-uniform mat4 projection;
+layout(location = 0) out vec3 frag_color;
 
 void main()
 {
-    vec2 res = vec2(screen_size.x / 10, screen_size.y / 10); // Resolution used for vertex wobble
-
-    vec4 vertex_view_m = view * model_transform * vec4(a_pos, 1.0);
-    vec4 vertex_projected = projection * vertex_view_m;
-
-    // Simulating vertex wobble
-    vertex_projected.xyz = vertex_projected.xyz / vertex_projected.w;
-    vertex_projected.xy = floor(res * vertex_projected.xy) / res;
-    vertex_projected.xyz *= vertex_projected.w;
-
-    gl_Position = vertex_projected;
-
-    // Simulating affine mapping
-    float dist = length(vertex_view_m);
-    float affine = dist + ((vertex_projected.w * 8.0) / dist) * 0.5;
-
-    out_tex_coord = a_tex_coord * affine;
-    out_tex_coord_affine = affine;
+    gl_Position = vec4(positions[gl_VertexIndex], 0.0, 1.0);
+    frag_color = colors[gl_VertexIndex];
 }
