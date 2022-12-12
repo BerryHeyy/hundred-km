@@ -43,6 +43,7 @@ public:
     VkDevice get_logical_device() const;
     VkQueue get_present_queue() const;
     VkQueue get_graphics_queue() const;
+    VkCommandPool get_command_pool() const;
 
     SwapchainSupportDetails query_swap_chain_support(VkSurfaceKHR surface) const;
     QueueFamilyIndices find_queue_families(VkSurfaceKHR surface) const;
@@ -54,8 +55,13 @@ private:
     VkDevice logical_device;
     VkQueue graphics_queue, present_queue;
 
+    QueueFamilyIndices queue_indices;
+
+    VkCommandPool command_pool;
+
     void pick_physical_device(const std::vector<const char*>& device_extensions, VkSurfaceKHR surface);
-    void create_logical_device(const std::vector<const char*>& device_extensions, const std::vector<const char*>& validation_layers, QueueFamilyIndices indices);
+    void create_logical_device(const std::vector<const char*>& device_extensions, const std::vector<const char*>& validation_layers);
+    void create_command_pool();
 
     // Helper functions
     bool check_device_extension_support(VkPhysicalDevice device, const std::vector<const char*>& device_extensions);

@@ -19,12 +19,17 @@ LogicalDevice::LogicalDevice(const std::vector<const char*>& device_extensions, 
 {
     pick_physical_device(device_extensions, surface);
 
-    create_logical_device(device_extensions, validation_layers, find_queue_families(physical_device, surface));
+    queue_indices = find_queue_families(surface);
+
+    create_logical_device(device_extensions, validation_layers);
+    create_command_pool();
 }
 
-LogicalDevice::LogicalDevice(const std::vector<const char*>& device_extensions, const std::vector<const char*>& validation_layers, VkPhysicalDevice physical_device, QueueFamilyIndices indices) : physical_device {physical_device}
+LogicalDevice::LogicalDevice(const std::vector<const char*>& device_extensions, const std::vector<const char*>& validation_layers, VkPhysicalDevice physical_device, QueueFamilyIndices indices) 
+    : physical_device {physical_device}, queue_indices {indices}
 {
-    create_logical_device(device_extensions, validation_layers, indices);
+    create_logical_device(device_extensions, validation_layers);
+    create_command_pool();
 }
 
 LogicalDevice::LogicalDevice(LogicalDevice&& source)
@@ -36,7 +41,7 @@ LogicalDevice::~LogicalDevice() {}
 
 LogicalDevice& LogicalDevice::operator = (LogicalDevice&& source)
 {
-    destroy();
+    if (logical_device != nullptr) destroy();
 
     move_from_source(std::move(source));
     
@@ -45,6 +50,8 @@ LogicalDevice& LogicalDevice::operator = (LogicalDevice&& source)
 
 void LogicalDevice::destroy()
 {
+    vkDestroyCommandPool(logical_device, command_pool, nullptr);
+
     vkDestroyDevice(logical_device, nullptr);
 }
 
@@ -61,6 +68,11 @@ VkQueue LogicalDevice::get_present_queue() const
 VkQueue LogicalDevice::get_graphics_queue() const
 {
     return graphics_queue;
+}
+
+VkCommandPool LogicalDevice::get_command_pool() const
+{
+    return command_pool;
 }
 
 void LogicalDevice::pick_physical_device(const std::vector<const char*>& device_extensions, VkSurfaceKHR surface)
@@ -91,11 +103,11 @@ void LogicalDevice::pick_physical_device(const std::vector<const char*>& device_
     }
 }
 
-void LogicalDevice::create_logical_device(const std::vector<const char*>& device_extensions, const std::vector<const char*>& validation_layers, QueueFamilyIndices indices)
+void LogicalDevice::create_logical_device(const std::vector<const char*>& device_extensions, const std::vector<const char*>& validation_layers)
 {
 
     std::vector<VkDeviceQueueCreateInfo> queue_create_infos;
-    std::set<uint32_t> unique_queue_families = {indices.graphics_family.value(), indices.present_family.value()};
+    std::set<uint32_t> unique_queue_families = {queue_indices.graphics_family.value(), queue_indices.present_family.value()};
 
     float queue_priority = 1.0f;
     for (uint32_t queue_family : unique_queue_families)
@@ -137,8 +149,8 @@ void LogicalDevice::create_logical_device(const std::vector<const char*>& device
         throw std::runtime_error("Failed to create logical device.");
     }
 
-    vkGetDeviceQueue(logical_device, indices.graphics_family.value(), 0, &graphics_queue);
-    vkGetDeviceQueue(logical_device, indices.present_family.value(), 0, &present_queue);
+    vkGetDeviceQueue(logical_device, queue_indices.graphics_family.value(), 0, &graphics_queue);
+    vkGetDeviceQueue(logical_device, queue_indices.present_family.value(), 0, &present_queue);
 }
 
 bool LogicalDevice::check_device_extension_support(VkPhysicalDevice device, const std::vector<const char*>& device_extensions)
@@ -156,6 +168,19 @@ bool LogicalDevice::check_device_extension_support(VkPhysicalDevice device, cons
     }
 
     return required_extensions.empty();
+}
+
+void LogicalDevice::create_command_pool()
+{
+    VkCommandPoolCreateInfo pool_info {};
+    pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+    pool_info.queueFamilyIndex = queue_indices.graphics_family.value();
+
+    if (vkCreateCommandPool(logical_device, &pool_info, nullptr, &command_pool) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Failed to create command pool!");
+    }
 }
 
 QueueFamilyIndices LogicalDevice::find_queue_families(VkSurfaceKHR surface) const
@@ -266,11 +291,13 @@ void LogicalDevice::move_from_source(LogicalDevice&& source)
     logical_device = source.logical_device;
     graphics_queue = source.graphics_queue;
     present_queue = source.present_queue;
+    command_pool = source.command_pool;
 
     source.physical_device = nullptr;
     source.logical_device = nullptr;
     source.graphics_queue = nullptr;
     source.present_queue = nullptr;
+    source.command_pool = nullptr;
 }
 
 }

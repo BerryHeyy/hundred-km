@@ -39,7 +39,6 @@ static hkm::LogicalDevice device;
 static hkm::Swapchain swapchain;
 static hkm::GraphicsPipeline graphics_pipeline;
 
-static VkCommandPool command_pool;
 static std::vector<VkCommandBuffer> command_buffers;
 
 static std::vector<VkSemaphore> image_available_semaphores;
@@ -190,28 +189,13 @@ void record_command_buffer(VkCommandBuffer command_buffer, uint32_t image_index)
     }
 }
 
-void create_command_pool()
-{
-    hkm::QueueFamilyIndices queue_family_indices = device.find_queue_families(surface);
-
-    VkCommandPoolCreateInfo pool_info {};
-    pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-    pool_info.queueFamilyIndex = queue_family_indices.graphics_family.value();
-
-    if (vkCreateCommandPool(device.get_logical_device(), &pool_info, nullptr, &command_pool) != VK_SUCCESS)
-    {
-        throw std::runtime_error("Failed to create command pool!");
-    }
-}
-
 void create_command_buffers()
 {
     command_buffers.resize(MAX_FRAMES_IN_FLIGHT);
 
     VkCommandBufferAllocateInfo alloc_info {};
     alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    alloc_info.commandPool = command_pool;
+    alloc_info.commandPool = device.get_command_pool();
     alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     alloc_info.commandBufferCount = (uint32_t) command_buffers.size();
 
@@ -222,7 +206,6 @@ void create_command_buffers()
 }
 
 /* #endregion */
-
 
 void recreate_swap_chain()
 {
@@ -286,7 +269,6 @@ void hkm::vulkan_handler::init_vulkan()
 
     graphics_pipeline = std::move(GraphicsPipeline(&device, "vert", "frag", c_info));
 
-    create_command_pool();
     create_command_buffers();
 
     create_sync_objects();
@@ -377,8 +359,6 @@ void hkm::vulkan_handler::cleanup_vulkan()
         vkDestroySemaphore(device.get_logical_device(), render_finished_semaphores[i], nullptr);
         vkDestroyFence(device.get_logical_device(), in_flight_fences[i], nullptr);
     }
-
-    vkDestroyCommandPool(device.get_logical_device(), command_pool, nullptr);
 
     graphics_pipeline.destroy();
 
