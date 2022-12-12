@@ -10,8 +10,14 @@ set (HKM_SOURCES
     vulkan_handler.cpp
     resource_handler.hpp
     resource_handler.cpp
+    mesh.hpp
+    mesh.cpp
     graphics_pipeline.hpp
     graphics_pipeline.cpp
+    swapchain.hpp
+    swapchain.cpp
+    logical_device.hpp
+    logical_device.cpp
 )
 list (TRANSFORM HKM_SOURCES PREPEND "src/")
 

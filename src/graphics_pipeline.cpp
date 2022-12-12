@@ -4,8 +4,16 @@
 
 #include "resource_handler.hpp"
 
-hkm::GraphicsPipeline::GraphicsPipeline(
-            const VkDevice& device,
+namespace hkm
+{
+
+GraphicsPipeline::GraphicsPipeline()
+{
+
+}
+
+GraphicsPipeline::GraphicsPipeline(
+            const LogicalDevice* device,
             const std::string& vert_name,
             const std::string& frag_name,
             const GraphicsPipelineConfigInfo& config_info
@@ -14,16 +22,47 @@ hkm::GraphicsPipeline::GraphicsPipeline(
     create_graphics_pipeline();
 }
 
-hkm::GraphicsPipeline::~GraphicsPipeline()
+GraphicsPipeline::~GraphicsPipeline()
 {
-    vkDestroyPipeline(device, graphics_pipeline, nullptr);
-    vkDestroyPipelineLayout(device, pipeline_layout, nullptr);
+    if (device == nullptr) return;
+
+    vkDestroyPipeline(device->get_logical_device(), graphics_pipeline_handle, nullptr);
+    vkDestroyPipelineLayout(device->get_logical_device(), pipeline_layout, nullptr);
 }
 
-void hkm::GraphicsPipeline::create_graphics_pipeline()
+GraphicsPipeline& GraphicsPipeline::operator = (GraphicsPipeline&& source)
 {
-    std::vector<char> vert_shader_code = hkm::resource_handler::read_shader_binary(vert_name);
-    std::vector<char> frag_shader_code = hkm::resource_handler::read_shader_binary(vert_name);
+    if (device != nullptr)
+    {
+        vkDestroyPipeline(device->get_logical_device(), graphics_pipeline_handle, nullptr);
+        vkDestroyPipelineLayout(device->get_logical_device(), pipeline_layout, nullptr);
+    }
+
+    vert_name = source.vert_name;
+    frag_name = source.frag_name;
+    device = source.device;
+    pipeline_layout = source.pipeline_layout;
+    graphics_pipeline_handle = source.graphics_pipeline_handle;
+    config_info = source.config_info;
+
+    source.vert_name = "";
+    source.frag_name = "";
+    source.device = nullptr;
+    source.pipeline_layout = nullptr;
+    source.graphics_pipeline_handle = nullptr;
+
+    return *this;
+}
+
+VkPipeline GraphicsPipeline::get_graphics_pipeline_handle() const
+{
+    return graphics_pipeline_handle;
+}
+
+void GraphicsPipeline::create_graphics_pipeline()
+{
+    std::vector<char> vert_shader_code = resource_handler::read_shader_binary(vert_name);
+    std::vector<char> frag_shader_code = resource_handler::read_shader_binary(frag_name);
 
     VkShaderModule vert_shader_module = create_shader_module(vert_shader_code);
     VkShaderModule frag_shader_module = create_shader_module(frag_shader_code);
@@ -128,7 +167,7 @@ void hkm::GraphicsPipeline::create_graphics_pipeline()
     pipeline_layout_info.pushConstantRangeCount = 0; // Optional
     pipeline_layout_info.pPushConstantRanges = nullptr; // Optional
 
-    if (vkCreatePipelineLayout(device, &pipeline_layout_info, nullptr, &pipeline_layout) != VK_SUCCESS) {
+    if (vkCreatePipelineLayout(device->get_logical_device(), &pipeline_layout_info, nullptr, &pipeline_layout) != VK_SUCCESS) {
         throw std::runtime_error("Failed to create pipeline layout!");
     } 
 
@@ -158,16 +197,16 @@ void hkm::GraphicsPipeline::create_graphics_pipeline()
     pipeline_info.basePipelineHandle = VK_NULL_HANDLE; // Optional
     pipeline_info.basePipelineIndex = -1; // Optional
 
-    if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &graphics_pipeline) != VK_SUCCESS) {
+    if (vkCreateGraphicsPipelines(device->get_logical_device(), VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &graphics_pipeline_handle) != VK_SUCCESS) {
         throw std::runtime_error("Failed to create graphics pipeline!");
     }
 
     // Cleanup after creation of pipeline
-    vkDestroyShaderModule(device, frag_shader_module, nullptr);
-    vkDestroyShaderModule(device, vert_shader_module, nullptr);
+    vkDestroyShaderModule(device->get_logical_device(), frag_shader_module, nullptr);
+    vkDestroyShaderModule(device->get_logical_device(), vert_shader_module, nullptr);
 }
 
-VkShaderModule hkm::GraphicsPipeline::create_shader_module(const std::vector<char>& code)
+VkShaderModule GraphicsPipeline::create_shader_module(const std::vector<char>& code) const
 {
     VkShaderModuleCreateInfo create_info {};
     create_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -175,9 +214,11 @@ VkShaderModule hkm::GraphicsPipeline::create_shader_module(const std::vector<cha
     create_info.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
     VkShaderModule shader_module;
-    if (vkCreateShaderModule(device, &create_info, nullptr, &shader_module) != VK_SUCCESS) {
+    if (vkCreateShaderModule(device->get_logical_device(), &create_info, nullptr, &shader_module) != VK_SUCCESS) {
         throw std::runtime_error("Failed to create shader module!");
     }
 
     return shader_module;
+}
+
 }
