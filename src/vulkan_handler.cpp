@@ -369,6 +369,7 @@ void hkm::vulkan_handler::wait_for_exit()
 
 void hkm::vulkan_handler::cleanup_vulkan()
 {
+    swapchain.destroy();
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
     {
@@ -378,6 +379,10 @@ void hkm::vulkan_handler::cleanup_vulkan()
     }
 
     vkDestroyCommandPool(device.get_logical_device(), command_pool, nullptr);
+
+    graphics_pipeline.destroy();
+
+    device.destroy();
     
     vkDestroySurfaceKHR(vk_instance, surface, nullptr);
     vkDestroyInstance(vk_instance, nullptr);

@@ -25,14 +25,7 @@ Swapchain::Swapchain(Swapchain&& source) : device {source.device}, surface {surf
     move_from_source(std::move(source));
 }
 
-Swapchain::~Swapchain()
-{
-    if (device == nullptr) return;
-
-    cleanup_swapchain();
-
-    vkDestroyRenderPass(device->get_logical_device(), render_pass, nullptr);
-}
+Swapchain::~Swapchain() {}
 
 void Swapchain::recreate_swapchain(VkExtent2D window_extent)
 {
@@ -79,9 +72,16 @@ std::vector<VkFramebuffer>& Swapchain::get_swapchain_framebuffers()
     return swapchain_framebuffers;
 }
 
+void Swapchain::destroy()
+{
+    cleanup_swapchain();
+
+    vkDestroyRenderPass(device->get_logical_device(), render_pass, nullptr);
+}
+
 Swapchain& Swapchain::operator = (Swapchain&& source)
 {
-    if (device != nullptr) cleanup_swapchain();
+    if (device != nullptr) destroy();
 
     move_from_source(std::move(source));
 

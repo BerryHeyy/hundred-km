@@ -47,6 +47,8 @@ public:
     SwapchainSupportDetails query_swap_chain_support(VkSurfaceKHR surface) const;
     QueueFamilyIndices find_queue_families(VkSurfaceKHR surface) const;
 
+    void destroy();
+
 private:
     VkPhysicalDevice physical_device;
     VkDevice logical_device;

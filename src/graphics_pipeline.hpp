@@ -36,6 +36,8 @@ namespace hkm
 
         VkPipeline get_graphics_pipeline_handle() const;
 
+        void destroy();
+
     private:
         std::string vert_name = "", frag_name = "";
         const LogicalDevice* device;

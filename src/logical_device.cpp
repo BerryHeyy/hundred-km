@@ -32,18 +32,20 @@ LogicalDevice::LogicalDevice(LogicalDevice&& source)
     move_from_source(std::move(source));
 }
 
-LogicalDevice::~LogicalDevice()
-{
-    vkDestroyDevice(logical_device, nullptr);
-}
+LogicalDevice::~LogicalDevice() {}
 
 LogicalDevice& LogicalDevice::operator = (LogicalDevice&& source)
 {
-    vkDestroyDevice(logical_device, nullptr);
+    destroy();
 
     move_from_source(std::move(source));
     
     return *this;
+}
+
+void LogicalDevice::destroy()
+{
+    vkDestroyDevice(logical_device, nullptr);
 }
 
 VkDevice LogicalDevice::get_logical_device() const

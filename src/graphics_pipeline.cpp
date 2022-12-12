@@ -22,21 +22,11 @@ GraphicsPipeline::GraphicsPipeline(
     create_graphics_pipeline();
 }
 
-GraphicsPipeline::~GraphicsPipeline()
-{
-    if (device == nullptr) return;
-
-    vkDestroyPipeline(device->get_logical_device(), graphics_pipeline_handle, nullptr);
-    vkDestroyPipelineLayout(device->get_logical_device(), pipeline_layout, nullptr);
-}
+GraphicsPipeline::~GraphicsPipeline() {}
 
 GraphicsPipeline& GraphicsPipeline::operator = (GraphicsPipeline&& source)
 {
-    if (device != nullptr)
-    {
-        vkDestroyPipeline(device->get_logical_device(), graphics_pipeline_handle, nullptr);
-        vkDestroyPipelineLayout(device->get_logical_device(), pipeline_layout, nullptr);
-    }
+    if (device != nullptr) destroy();
 
     vert_name = source.vert_name;
     frag_name = source.frag_name;
@@ -57,6 +47,12 @@ GraphicsPipeline& GraphicsPipeline::operator = (GraphicsPipeline&& source)
 VkPipeline GraphicsPipeline::get_graphics_pipeline_handle() const
 {
     return graphics_pipeline_handle;
+}
+
+void GraphicsPipeline::destroy()
+{
+    vkDestroyPipeline(device->get_logical_device(), graphics_pipeline_handle, nullptr);
+    vkDestroyPipelineLayout(device->get_logical_device(), pipeline_layout, nullptr);
 }
 
 void GraphicsPipeline::create_graphics_pipeline()

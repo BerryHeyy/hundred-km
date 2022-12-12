@@ -36,6 +36,8 @@ public:
 
     std::vector<VkFramebuffer>& get_swapchain_framebuffers();
 
+    void destroy();
+
 private:
     VkSwapchainKHR swapchain_handle;
     VkFormat swapchain_image_format;
