@@ -92,10 +92,37 @@ void GraphicsPipeline::create_graphics_pipeline()
     // Vertex input
     VkPipelineVertexInputStateCreateInfo vertex_input_info{};
     vertex_input_info.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-    vertex_input_info.vertexBindingDescriptionCount = 0;
-    vertex_input_info.pVertexBindingDescriptions = nullptr; // Optional
-    vertex_input_info.vertexAttributeDescriptionCount = 0;
-    vertex_input_info.pVertexAttributeDescriptions = nullptr; // Optional
+
+    vertex_input_binding_description.binding = 0;
+    vertex_input_binding_description.stride = sizeof(float) * (3 * 2 + 2);
+    vertex_input_binding_description.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+    VkVertexInputAttributeDescription position_description {};
+    position_description.binding = 0;
+    position_description.location = 0;
+    position_description.format = VK_FORMAT_R32G32B32_SFLOAT;
+    position_description.offset = 0;
+
+    VkVertexInputAttributeDescription normal_description {};
+    normal_description.binding = 0;
+    normal_description.location = 1;
+    normal_description.format = VK_FORMAT_R32G32B32_SFLOAT;
+    normal_description.offset = sizeof(float) * 3;
+
+    VkVertexInputAttributeDescription tex_coords_description {};
+    tex_coords_description.binding = 0;
+    tex_coords_description.location = 2;
+    tex_coords_description.format = VK_FORMAT_R32G32_SFLOAT;
+    tex_coords_description.offset = sizeof(float) * 3 * 2;
+
+    vertex_input_attribute_descriptions.push_back(position_description);
+    vertex_input_attribute_descriptions.push_back(normal_description);
+    vertex_input_attribute_descriptions.push_back(tex_coords_description);
+
+    vertex_input_info.vertexBindingDescriptionCount = 1;
+    vertex_input_info.pVertexBindingDescriptions = &vertex_input_binding_description; // Optional
+    vertex_input_info.vertexAttributeDescriptionCount = vertex_input_attribute_descriptions.size();
+    vertex_input_info.pVertexAttributeDescriptions = vertex_input_attribute_descriptions.data(); // Optional
 
     // Input assembly
     VkPipelineInputAssemblyStateCreateInfo input_assembly_info{};

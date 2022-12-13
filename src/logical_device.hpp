@@ -45,6 +45,8 @@ public:
     VkQueue get_graphics_queue() const;
     VkCommandPool get_command_pool() const;
 
+    VkBuffer create_buffer(VkBufferCreateInfo) const;
+
     SwapchainSupportDetails query_swap_chain_support(VkSurfaceKHR surface) const;
     QueueFamilyIndices find_queue_families(VkSurfaceKHR surface) const;
 

@@ -46,6 +46,8 @@ namespace hkm
         VkPipeline graphics_pipeline_handle;
 
         GraphicsPipelineConfigInfo config_info {};
+        VkVertexInputBindingDescription vertex_input_binding_description {};
+        std::vector<VkVertexInputAttributeDescription> vertex_input_attribute_descriptions;
 
         void create_graphics_pipeline();
 
