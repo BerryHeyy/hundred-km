@@ -75,6 +75,28 @@ VkCommandPool LogicalDevice::get_command_pool() const
     return command_pool;
 }
 
+VkBuffer LogicalDevice::create_buffer(VkBufferCreateInfo buffer_info) const
+{
+    VkBuffer buffer;
+
+    if (vkCreateBuffer(logical_device, &buffer_info, nullptr, &buffer) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create vertex buffer!");
+    }
+
+    return buffer;
+}
+
+VkDeviceMemory LogicalDevice::allocate_memory(VkMemoryAllocateInfo allocation_info) const
+{
+    VkDeviceMemory memory;
+
+    if (vkAllocateMemory(logical_device, &allocation_info, nullptr, &memory) != VK_SUCCESS) {
+        throw std::runtime_error("failed to allocate vertex buffer memory!");
+    }
+
+    return memory;
+}
+
 void LogicalDevice::pick_physical_device(const std::vector<const char*>& device_extensions, VkSurfaceKHR surface)
 {
     uint32_t device_count = 0;

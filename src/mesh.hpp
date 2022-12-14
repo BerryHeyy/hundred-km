@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include <vulkan/vulkan.h>
 #include <vec2.hpp>
 #include <vec3.hpp>
 
@@ -31,6 +32,6 @@ namespace hkm
     private:
         bool initialized = false;
 
-        uint32_t VAO, VBO, EBO;
+        VkDeviceMemory vertex_buffer;
     };
 }
