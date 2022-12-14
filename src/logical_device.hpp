@@ -48,6 +48,7 @@ public:
     VkBuffer create_buffer(VkBufferCreateInfo buffer_info) const;
     VkDeviceMemory allocate_memory(VkMemoryAllocateInfo allocation_info) const;
 
+    uint32_t find_memory_type(uint32_t type_filter, VkMemoryPropertyFlags properties);
     SwapchainSupportDetails query_swap_chain_support(VkSurfaceKHR surface) const;
     QueueFamilyIndices find_queue_families(VkSurfaceKHR surface) const;
 

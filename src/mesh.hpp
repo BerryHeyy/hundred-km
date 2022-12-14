@@ -6,6 +6,8 @@
 #include <vec2.hpp>
 #include <vec3.hpp>
 
+#include "logical_device.hpp"
+
 namespace hkm
 {
     struct Vertex
@@ -18,20 +20,18 @@ namespace hkm
     class Mesh
     {
     public:
-        std::vector<Vertex> vertices;
-        std::vector<uint32_t> indices;
-        uint32_t texture;
-
         Mesh();
-
-        Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, uint32_t texture);
+        Mesh(LogicalDevice* ld, std::vector<Vertex> vertices, std::vector<unsigned int> indices, uint32_t texture);
+        ~Mesh();
 
         void draw() const;
-        void initialize_mesh();
+        void initialize_mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, uint32_t texture);
 
     private:
+        LogicalDevice* device;
         bool initialized = false;
 
-        VkDeviceMemory vertex_buffer;
+        VkBuffer vertex_buffer;
+        VkDeviceMemory vertex_buffer_memory;
     };
 }

@@ -175,6 +175,20 @@ void LogicalDevice::create_logical_device(const std::vector<const char*>& device
     vkGetDeviceQueue(logical_device, queue_indices.present_family.value(), 0, &present_queue);
 }
 
+uint32_t LogicalDevice::find_memory_type(uint32_t type_filter, VkMemoryPropertyFlags properties)
+{
+    VkPhysicalDeviceMemoryProperties mem_properties;
+    vkGetPhysicalDeviceMemoryProperties(physical_device, &mem_properties);
+
+    for (uint32_t i = 0; i < mem_properties.memoryTypeCount; i++) {
+        if ((type_filter & (1 << i)) && (mem_properties.memoryTypes[i].propertyFlags & properties) == properties) {
+            return i;
+        }
+    }
+
+    throw std::runtime_error("Failed to find suitable memory type.");
+}
+
 bool LogicalDevice::check_device_extension_support(VkPhysicalDevice device, const std::vector<const char*>& device_extensions)
 {
     uint32_t extension_count;
