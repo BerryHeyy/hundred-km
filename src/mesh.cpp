@@ -1,5 +1,7 @@
 #include "mesh.hpp"
 
+#include <cstring>
+
 namespace hkm
 {
 
@@ -39,11 +41,19 @@ Mesh::Mesh(LogicalDevice* ld, std::vector<Vertex> vertices, std::vector<unsigned
 Mesh::~Mesh()
 {
     vkDestroyBuffer(device->get_logical_device(), vertex_buffer, nullptr);
+    vkFreeMemory(device->get_logical_device(), vertex_buffer_memory, nullptr);
 }
 
 void Mesh::initialize_mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, uint32_t texture)
 {
+    size_t buff_size = sizeof(Vertex) * vertices.size();
 
+    void* buffer_addr;
+    vkMapMemory(device->get_logical_device(), vertex_buffer_memory, 0, buff_size, 0, &buffer_addr);
+
+    memcpy(buffer_addr, vertices.data(), buff_size);
+
+    vkUnmapMemory(device->get_logical_device(), vertex_buffer_memory);
 }
 
 }
